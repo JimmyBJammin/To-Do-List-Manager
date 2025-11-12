@@ -14,11 +14,9 @@ Enjoy!
 #Importing os allows me to control the directory
 import csv
 import os
-import shutil
 
 list_path = str("C:\GitHub Repos\To-Do-List-Manager\Lists")
 list_list = os.listdir(list_path)
-menu_choice = str("")
 
 #Main_Menu will be the default function, managing the user interface
 def Main_Menu():
@@ -45,6 +43,9 @@ def Main_Menu():
 
 #View_List will display all created lists on the user's machines
 def View_List():
+    list_path = str("C:\GitHub Repos\To-Do-List-Manager\Lists")
+    list_list = os.listdir(list_path)
+
     count = 0
     menu_choice = str("")
 
@@ -100,17 +101,12 @@ def New_List():
         new_list_name = input("-> ")
         new_list_name = new_list_name + ".csv"
 
+    new_list_name = list_path + "\\" + new_list_name
+
     with open(new_list_name, mode = 'w') as csv_file:
         csv_writer = csv.writer(csv_file)
 
         csv_writer.writerows("1")
-
-        print(os.listdir(os.getcwd()))
-
-        csv_file.flush()
-        csv_file.close()
-
-    #shutil.move(new_list_name, list_path)
 
     Main_Menu()
 
