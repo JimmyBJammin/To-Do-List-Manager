@@ -11,17 +11,20 @@ Users will be able to:
 Enjoy!
 '''
 #Importing csv is required for reading and writing .csv files
+#Importing os allows me to control the directory
 import csv
 import os
+import shutil
 
-list_list = os.listdir("C:\GitHub Repos\To-Do-List-Manager\Lists")
-list_option = str("")
-menu_choice = str(0)
-count = int(0)
+list_path = str("C:\GitHub Repos\To-Do-List-Manager\Lists")
+list_list = os.listdir(list_path)
+menu_choice = str("")
 
 #Main_Menu will be the default function, managing the user interface
 def Main_Menu():
-    print("Welcome to the To-Do List Manager!\n")
+    menu_choice = str("")
+
+    print("\nWelcome to the To-Do List Manager!\n")
 
     print("What would like to do?")
     print("1. View Lists")
@@ -43,35 +46,74 @@ def Main_Menu():
 #View_List will display all created lists on the user's machines
 def View_List():
     count = 0
-    list_option = str("")
+    menu_choice = str("")
 
     print("\nWhich list would you like to view?\n")
 
+    print("0. Return to Main Menu")
     for list in list_list:
         print(str(count + 1) + ": " + list_list[count])
         count += 1
 
     print()
 
-    while not(list_option.isdigit()):
-        list_option = input("-> ")
+    while not(menu_choice.isdigit()):
+        menu_choice = input("-> ")
 
-        if list_option.isdigit():
-            if not((int(list_option) >= 1) and (int(list_option) <= len(list_list))):
-                list_option = ""
+        if menu_choice == "0":
+            menu_choice = menu_choice
+        elif menu_choice.isdigit():
+            if not((int(menu_choice) >= 1) and (int(menu_choice) <= len(list_list))):
+                menu_choice = ""
                 print("\nThat was not a valid choice. Please enter the corresponding number of your choice.")
-        elif not(list_option.isdigit()):
-            list_option = ""
+        elif not(menu_choice.isdigit()):
+            menu_choice = ""
             print("\nThat was not a valid choice. Please enter the corresponding number of your choice.")
-
-    Read_List(int(list_option) - 1)
+        
+    if menu_choice == "0":
+        Main_Menu()
+    else:    
+        Read_List(int(menu_choice) - 1)
 
 #Read_List will print the data from the .csv file and allow editing
 def Read_List(index):
     print("You chose: " + list_list[index])
+    
+    list_name = list_path + "\\" + list_list[index]
+
+    with open(list_name, mode='r') as csv_file:
+        csv_reader = csv.reader(csv_file)
+
+        for row in csv_reader:
+            print(row)
 
 #New_List will allow user to create lists and assign tasks to them
 def New_List():
-    print("What would you like to name your list?")
+    new_list_name = str("")
+
+    print("\nWhat would you like to name your list?")
+    new_list_name = input("-> ")
+    new_list_name = new_list_name + ".csv"
+
+    while new_list_name in list_list:
+        print("\nThat list name already exists. Please choose another name.")
+        new_list_name = input("-> ")
+        new_list_name = new_list_name + ".csv"
+
+    with open(new_list_name, mode = 'w') as csv_file:
+        csv_writer = csv.writer(csv_file)
+
+        csv_writer.writerows("1")
+
+        print(os.listdir(os.getcwd()))
+
+        csv_file.flush()
+        csv_file.close()
+
+    #shutil.move(new_list_name, list_path)
+
+    Main_Menu()
+
+
 
 Main_Menu()
