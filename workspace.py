@@ -15,9 +15,6 @@ Enjoy!
 import csv
 import os
 
-list_path = str("C:\GitHub Repos\To-Do-List-Manager\Lists")
-list_list = os.listdir(list_path)
-
 #Main_Menu will be the default function, managing the user interface
 def Main_Menu():
     menu_choice = str("")
@@ -90,6 +87,9 @@ def Read_List(index):
 
 #New_List will allow user to create lists and assign tasks to them
 def New_List():
+    list_path = str("C:\GitHub Repos\To-Do-List-Manager\Lists")
+    list_list = os.listdir(list_path)
+    menu_choice = str("")
     new_list_name = str("")
 
     print("\nWhat would you like to name your list?")
@@ -106,7 +106,13 @@ def New_List():
     with open(new_list_name, mode = 'w') as csv_file:
         csv_writer = csv.writer(csv_file)
 
-        csv_writer.writerows("1")
+        print("\nWhat task would you like to add? (Enter '0' to exit)")
+
+        while not(menu_choice == "0"):
+            menu_choice = input("-> ")
+
+            if not(menu_choice == "0"):
+                csv_writer.writerow(menu_choice)
 
     Main_Menu()
 
