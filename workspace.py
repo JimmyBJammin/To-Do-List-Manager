@@ -19,7 +19,7 @@ import os
 def Main_Menu():
     menu_choice = str("")
 
-    print("\nWelcome to the To-Do List Manager!\n")
+    print("\nHello " + os.getlogin() + "! Welcome to the To-Do List Manager!\n")
 
     print("What would like to do?")
     print("1. View Lists")
