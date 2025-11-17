@@ -17,6 +17,7 @@ import os
 
 #Main_Menu will be the default function, managing the user interface
 def Main_Menu():
+    os.system('cls')
     menu_choice = str("")
 
     print("\nHello " + os.getlogin() + "! Welcome to the To-Do List Manager!\n")
@@ -40,6 +41,7 @@ def Main_Menu():
 
 #New_List will allow user to create lists and assign tasks to them
 def New_List():
+    os.system('cls')
     list_path = str("C:\GitHub Repos\To-Do-List-Manager\Lists")
     list_list = os.listdir(list_path)
     menu_choice = str("")
@@ -74,9 +76,9 @@ def New_List():
 
     Main_Menu()
 
-
 #View_List will display all created lists on the user's machines
 def View_List():
+    os.system('cls')
     list_path = str("C:\GitHub Repos\To-Do-List-Manager\Lists")
     list_list = os.listdir(list_path)
 
@@ -85,15 +87,14 @@ def View_List():
 
     print("\nWhich list would you like to view?\n")
 
-    print("0. Return to Main Menu")
     for list in list_list:
         print(str(count + 1) + ": " + list_list[count])
         count += 1
 
-    print()
+    print("0. Return to Main Menu")
 
     while not(menu_choice.isdigit()):
-        menu_choice = input("-> ")
+        menu_choice = input("\n-> ")
 
         if menu_choice == "0":
             menu_choice = menu_choice
@@ -112,9 +113,11 @@ def View_List():
 
 #Read_List will print the data from the .csv file and allow editing
 def Read_List(index):
+    os.system('cls')
     list_path = str("C:\GitHub Repos\To-Do-List-Manager\Lists")
     list_list = os.listdir(list_path)
-    
+    count = 0
+
     print("You chose: " + list_list[index] + "\n")
     
     list_name = list_path + "\\" + list_list[index]
@@ -123,7 +126,8 @@ def Read_List(index):
         csv_reader = csv.reader(csv_file)
 
         for row in csv_reader:
-            print(row[0] + "\t" + row[1])
+            print(str(count) + ". " + row[0] + "\t" + row[1])
+            count += 1
 
     print("\nWould you like to edit?")
     print("1. Mark a task as complete")
@@ -137,24 +141,24 @@ def Read_List(index):
         menu_choice = str(input("-> "))
 
     if menu_choice == "1":
-        Complete_Task()
+        Complete_Task(index)
     elif menu_choice == "2":
-        Delete_Task()
+        Delete_Task(index)
     elif menu_choice == "3":
-        Delete_List()
+        Delete_List(index)
     else:        
         View_List()
 
+#Mark the designated task as complete with an 'x'
 def Complete_Task(index):
-    print()
+    print(index)
 
+#Delete the designated task
 def Delete_Task(index):
-    print()
+    print(index)
 
+#Delete the entire list, with confirmation
 def Delete_List(index):
-    print()
-
-
-
+    print(index)
 
 Main_Menu()
