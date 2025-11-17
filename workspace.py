@@ -3,10 +3,10 @@ Hello! This is my To-Do List Manager project!
 
 Users will be able to:
 -Create lists
-    -Add/delete tasks to that list
-    -Set as a daily or unique list of tasks
+    -Add tasks to that list
 -View lists
--Mark tasks as complete
+    -Mark tasks as complete
+    -Delete tasks
 
 Enjoy!
 '''
@@ -78,7 +78,7 @@ def Read_List(index):
     list_path = str("C:\GitHub Repos\To-Do-List-Manager\Lists")
     list_list = os.listdir(list_path)
     
-    print("You chose: " + list_list[index])
+    print("You chose: " + list_list[index] + "\n")
     
     list_name = list_path + "\\" + list_list[index]
 
@@ -87,6 +87,15 @@ def Read_List(index):
 
         for row in csv_reader:
             print(row[0] + "\t" + row[1])
+
+    print("\nWould you like to edit?")
+    print("1. Mark a task as complete")
+    print("2. Delete a task")
+    print("0. Return")
+
+
+
+    View_List()
 
 #New_List will allow user to create lists and assign tasks to them
 def New_List():
