@@ -22,8 +22,8 @@ def Main_Menu():
     print("\nHello " + os.getlogin() + "! Welcome to the To-Do List Manager!\n")
 
     print("What would like to do?")
-    print("1. View Lists")
-    print("2. Create New List")
+    print("1. Create New List")
+    print("2. View Lists")
     print("0. Exit")
     menu_choice = str(input("\n-> "))
 
@@ -32,11 +32,48 @@ def Main_Menu():
         menu_choice = str(input("-> "))
 
     if menu_choice == "1":
-        View_List()
-    elif menu_choice == "2":
         New_List()
+    elif menu_choice == "2":
+        View_List()
     else:        
         quit
+
+#New_List will allow user to create lists and assign tasks to them
+def New_List():
+    list_path = str("C:\GitHub Repos\To-Do-List-Manager\Lists")
+    list_list = os.listdir(list_path)
+    menu_choice = str("")
+    new_list_name = str("")
+    column_titles = ["Task", "Complete"]
+    tasks = []
+
+    print("\nWhat would you like to name your list?")
+    new_list_name = input("-> ")
+    new_list_name = new_list_name + ".csv"
+
+    while new_list_name in list_list:
+        print("\nThat list name already exists. Please choose another name.")
+        new_list_name = input("-> ")
+        new_list_name = new_list_name + ".csv"
+
+    new_list_name = list_path + "\\" + new_list_name
+
+    with open(new_list_name, mode = 'w', newline='') as csv_file:
+        csv_writer = csv.writer(csv_file)
+
+        print("\nWhat task would you like to add? (Enter '0' to exit)")
+
+        while not(menu_choice == "0"):
+            menu_choice = input("-> ")
+
+            if not(menu_choice == "0"):
+                tasks.append([menu_choice, ""])
+
+        csv_writer.writerow(column_titles)
+        csv_writer.writerows(tasks)
+
+    Main_Menu()
+
 
 #View_List will display all created lists on the user's machines
 def View_List():
@@ -100,49 +137,23 @@ def Read_List(index):
         menu_choice = str(input("-> "))
 
     if menu_choice == "1":
-        
+        Complete_Task()
     elif menu_choice == "2":
-        
+        Delete_Task()
     elif menu_choice == "3":
-
+        Delete_List()
     else:        
         View_List()
 
-#New_List will allow user to create lists and assign tasks to them
-def New_List():
-    list_path = str("C:\GitHub Repos\To-Do-List-Manager\Lists")
-    list_list = os.listdir(list_path)
-    menu_choice = str("")
-    new_list_name = str("")
-    column_titles = ["Task", "Complete"]
-    tasks = []
+def Complete_Task(index):
+    print()
 
-    print("\nWhat would you like to name your list?")
-    new_list_name = input("-> ")
-    new_list_name = new_list_name + ".csv"
+def Delete_Task(index):
+    print()
 
-    while new_list_name in list_list:
-        print("\nThat list name already exists. Please choose another name.")
-        new_list_name = input("-> ")
-        new_list_name = new_list_name + ".csv"
+def Delete_List(index):
+    print()
 
-    new_list_name = list_path + "\\" + new_list_name
-
-    with open(new_list_name, mode = 'w', newline='') as csv_file:
-        csv_writer = csv.writer(csv_file)
-
-        print("\nWhat task would you like to add? (Enter '0' to exit)")
-
-        while not(menu_choice == "0"):
-            menu_choice = input("-> ")
-
-            if not(menu_choice == "0"):
-                tasks.append([menu_choice, ""])
-
-        csv_writer.writerow(column_titles)
-        csv_writer.writerows(tasks)
-
-    Main_Menu()
 
 
 
