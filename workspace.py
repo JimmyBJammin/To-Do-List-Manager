@@ -91,11 +91,22 @@ def Read_List(index):
     print("\nWould you like to edit?")
     print("1. Mark a task as complete")
     print("2. Delete a task")
+    print("3. Delete list")
     print("0. Return")
+    menu_choice = str(input("\n-> "))
 
+    while not(menu_choice == "1" or menu_choice == "2" or menu_choice == "3" or menu_choice == "0"):
+        print("\nThat was not a valid choice. Please enter the corresponding number of your choice.")
+        menu_choice = str(input("-> "))
 
+    if menu_choice == "1":
+        
+    elif menu_choice == "2":
+        
+    elif menu_choice == "3":
 
-    View_List()
+    else:        
+        View_List()
 
 #New_List will allow user to create lists and assign tasks to them
 def New_List():
