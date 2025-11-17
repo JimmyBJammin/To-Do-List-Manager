@@ -75,6 +75,9 @@ def View_List():
 
 #Read_List will print the data from the .csv file and allow editing
 def Read_List(index):
+    list_path = str("C:\GitHub Repos\To-Do-List-Manager\Lists")
+    list_list = os.listdir(list_path)
+    
     print("You chose: " + list_list[index])
     
     list_name = list_path + "\\" + list_list[index]
@@ -83,7 +86,7 @@ def Read_List(index):
         csv_reader = csv.reader(csv_file)
 
         for row in csv_reader:
-            print(row)
+            print(row[0] + "\t" + row[1])
 
 #New_List will allow user to create lists and assign tasks to them
 def New_List():
@@ -91,6 +94,8 @@ def New_List():
     list_list = os.listdir(list_path)
     menu_choice = str("")
     new_list_name = str("")
+    column_titles = ["Task", "Complete"]
+    tasks = []
 
     print("\nWhat would you like to name your list?")
     new_list_name = input("-> ")
@@ -103,7 +108,7 @@ def New_List():
 
     new_list_name = list_path + "\\" + new_list_name
 
-    with open(new_list_name, mode = 'w') as csv_file:
+    with open(new_list_name, mode = 'w', newline='') as csv_file:
         csv_writer = csv.writer(csv_file)
 
         print("\nWhat task would you like to add? (Enter '0' to exit)")
@@ -112,7 +117,10 @@ def New_List():
             menu_choice = input("-> ")
 
             if not(menu_choice == "0"):
-                csv_writer.writerow(menu_choice)
+                tasks.append([menu_choice, ""])
+
+        csv_writer.writerow(column_titles)
+        csv_writer.writerows(tasks)
 
     Main_Menu()
 
