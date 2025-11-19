@@ -29,6 +29,14 @@ def Main_Menu():
     menu_choice = str(input("\n-> "))
 
     while not(menu_choice == "1" or menu_choice == "2" or menu_choice == "0"):
+        os.system('cls')
+        print("\nHello " + os.getlogin() + "! Welcome to the To-Do List Manager!\n")
+
+        print("What would like to do?")
+        print("1. Create New List")
+        print("2. View Lists")
+        print("0. Exit")
+
         print("\nThat was not a valid choice. Please enter the corresponding number of your choice.")
         menu_choice = str(input("-> "))
 
@@ -39,40 +47,59 @@ def Main_Menu():
     else:        
         quit
 
-#New_List will allow user to create lists and assign tasks to them
+#Will create the csv file given the name and list of tasks
+def Write_CSV(csv_name, task_list):
+    with open(csv_name, mode='w', newline='') as csv_file:
+        csv_writer = csv.writer(csv_file)
+        
+        csv_writer.writerows(task_list)
+
+#Will return the list of tasks given the csv file name
+def Get_CSV(csv_name):
+    task_list = []
+
+    with open(csv_name, mode='r') as csv_file:
+        csv_reader = csv.reader(csv_file)
+
+        for row in csv_reader:
+            task_list.append(row)
+
+    return task_list
+
+#New_List will allow user to create lists and assign task_list to them
 def New_List():
     os.system('cls')
     list_path = str("C:\GitHub Repos\To-Do-List-Manager\Lists")
     list_list = os.listdir(list_path)
     menu_choice = str("")
     new_list_name = str("")
-    column_titles = ["Task", "Complete"]
-    tasks = []
+    task_list = [["Task", "Complete"]]
 
-    print("\nWhat would you like to name your list?")
-    new_list_name = input("-> ")
-    new_list_name = new_list_name + ".csv"
+    print("\nWhat would you like to name your list? (Enter '0' to cancel)")
+    menu_choice = input("-> ")
+    new_list_name = menu_choice + ".csv"
 
     while new_list_name in list_list:
-        print("\nThat list name already exists. Please choose another name.")
-        new_list_name = input("-> ")
-        new_list_name = new_list_name + ".csv"
+        os.system('cls')
+        new_list_name = str("")
 
+        print("\nThat list name already exists. Please choose another name. (Enter '0' to cancel)")
+        menu_choice = input("-> ")
+        new_list_name = menu_choice + ".csv"
+
+    
     new_list_name = list_path + "\\" + new_list_name
 
-    with open(new_list_name, mode = 'w', newline='') as csv_file:
-        csv_writer = csv.writer(csv_file)
-
-        print("\nWhat task would you like to add? (Enter '0' to exit)")
+    if not(menu_choice == '0'):
+        print("\nWhat task would you like to add? (Enter '0' finish)")
 
         while not(menu_choice == "0"):
             menu_choice = input("-> ")
 
             if not(menu_choice == "0"):
-                tasks.append([menu_choice, ""])
+                task_list.append([menu_choice, ""])
 
-        csv_writer.writerow(column_titles)
-        csv_writer.writerows(tasks)
+        Write_CSV(new_list_name, task_list)
 
     Main_Menu()
 
@@ -91,19 +118,40 @@ def View_List():
         print(str(count + 1) + ": " + list_list[count])
         count += 1
 
-    print("0. Return to Main Menu")
+    print("0. Return to Main Menu\n")
 
     while not(menu_choice.isdigit()):
-        menu_choice = input("\n-> ")
+        menu_choice = input("-> ")
 
         if menu_choice == "0":
             menu_choice = menu_choice
         elif menu_choice.isdigit():
             if not((int(menu_choice) >= 1) and (int(menu_choice) <= len(list_list))):
-                menu_choice = ""
+                os.system('cls')
+                count = 0
+                menu_choice = str("")
+
+                print("\nWhich list would you like to view?\n")
+
+                for list in list_list:
+                    print(str(count + 1) + ": " + list_list[count])
+                    count += 1
+
+                print("0. Return to Main Menu")
+                
                 print("\nThat was not a valid choice. Please enter the corresponding number of your choice.")
         elif not(menu_choice.isdigit()):
-            menu_choice = ""
+            os.system('cls')
+            count = 0
+            menu_choice = str("")
+
+            print("\nWhich list would you like to view?\n")
+
+            for list in list_list:
+                print(str(count + 1) + ": " + list_list[count])
+                count += 1
+
+            print("0. Return to Main Menu")
             print("\nThat was not a valid choice. Please enter the corresponding number of your choice.")
         
     if menu_choice == "0":
@@ -112,53 +160,243 @@ def View_List():
         Read_List(int(menu_choice) - 1)
 
 #Read_List will print the data from the .csv file and allow editing
-def Read_List(index):
+def Read_List(list_index):
     os.system('cls')
     list_path = str("C:\GitHub Repos\To-Do-List-Manager\Lists")
     list_list = os.listdir(list_path)
+    list_name = list_path + "\\" + list_list[list_index]
+    task_list = Get_CSV(list_name)
+
     count = 0
 
-    print("You chose: " + list_list[index] + "\n")
-    
-    list_name = list_path + "\\" + list_list[index]
+    print("You chose: " + list_list[list_index] + "\n")
 
-    with open(list_name, mode='r') as csv_file:
-        csv_reader = csv.reader(csv_file)
+    for row in task_list:
+        if count == 0:
+            print("   " + row[0] + "\t\t" + row[1])
+        else:
+            print(str(count) + ". " + row[0] + "\t\t" + row[1])
+        count += 1
 
-        for row in csv_reader:
-            print(str(count) + ". " + row[0] + "\t" + row[1])
-            count += 1
 
     print("\nWould you like to edit?")
     print("1. Mark a task as complete")
-    print("2. Delete a task")
-    print("3. Delete list")
+    print("2. Add a task")
+    print("3. Delete a task")
+    print("4. Delete list")
     print("0. Return")
     menu_choice = str(input("\n-> "))
 
-    while not(menu_choice == "1" or menu_choice == "2" or menu_choice == "3" or menu_choice == "0"):
+    while not(menu_choice == "1" or menu_choice == "2" or menu_choice == "3" or menu_choice == "4" or menu_choice == "0"):
+        os.system('cls')
+        count = 0
+
+        print("You chose: " + list_list[list_index] + "\n")
+
+        for row in task_list:
+            if count == 0:
+                print("   " + row[0] + "\t\t" + row[1])
+            else:
+                print(str(count) + ". " + row[0] + "\t\t" + row[1])
+            count += 1
+
+
+        print("\nWould you like to edit?")
+        print("1. Mark a task as complete")
+        print("2. Add a task")
+        print("3. Delete a task")
+        print("4. Delete list")
+        print("0. Return")
+
         print("\nThat was not a valid choice. Please enter the corresponding number of your choice.")
         menu_choice = str(input("-> "))
 
     if menu_choice == "1":
-        Complete_Task(index)
+        Complete_Task(list_index)
     elif menu_choice == "2":
-        Delete_Task(index)
+        Add_Task(list_index)
     elif menu_choice == "3":
-        Delete_List(index)
+        Delete_Task(list_index)
+    elif menu_choice == "4":
+        Delete_List(list_index)
     else:        
         View_List()
 
 #Mark the designated task as complete with an 'x'
-def Complete_Task(index):
-    print(index)
+def Complete_Task(list_index):
+    os.system('cls')
+    list_path = str("C:\GitHub Repos\To-Do-List-Manager\Lists")
+    list_list = os.listdir(list_path)
+    list_name = list_path + "\\" + list_list[list_index]
+    task_list = Get_CSV(list_name)
+
+    menu_choice = ""
+    count = 0
+
+    print(list_list[list_index]+ "\n")
+    for row in task_list:
+        if count == 0:
+            print("   " + row[0] + "\t\t" + row[1])
+        else:
+            print(str(count) + ".\t" + row[0] + "\t\t" + row[1])
+        count += 1
+    
+    print("\nWhich task have you completed? (Press '0' to cancel)")
+    
+    while not(menu_choice.isdigit()):
+        menu_choice = input("-> ")
+
+        if menu_choice == "0":
+            menu_choice = menu_choice
+        elif menu_choice.isdigit():
+            if not((int(menu_choice) >= 1) and (int(menu_choice) <= (len(task_list) - 1))):
+                os.system('cls')
+                menu_choice = str("")
+                count = 0
+
+                print(list_list[list_index]+ "\n")
+                for row in task_list:
+                    if count == 0:
+                        print("\t" + row[0] + "\t\t" + row[1])
+                    else:
+                        print(str(count) + ".\t" + row[0] + "\t\t" + row[1])
+                    count += 1
+                
+                print("\nWhich task have you completed? (Press '0' to cancel)")
+                
+                print("\nThat was not a valid choice. Please enter the corresponding number of your choice.")
+        elif not(menu_choice.isdigit()):
+            os.system('cls')
+            count = 0
+            menu_choice = str("")
+
+            print(list_list[list_index]+ "\n")
+            for row in task_list:
+                if count == 0:
+                    print("\t" + row[0] + "\t\t" + row[1])
+                else:
+                    print(str(count) + ".\t" + row[0] + "\t\t" + row[1])
+                count += 1
+            
+            print("\nWhich task have you completed? (Press '0' to cancel)")
+
+            print("\nThat was not a valid choice. Please enter the corresponding number of your choice.")
+
+    if not(menu_choice == "0"):
+        task_list[int(menu_choice)][1] = "x"
+
+        Write_CSV(list_name, task_list)
+
+    Read_List(list_index)
+
+#Add a task to the end of the list of tasks
+def Add_Task(list_index):
+    os.system('cls')
+    list_path = str("C:\GitHub Repos\To-Do-List-Manager\Lists")
+    list_list = os.listdir(list_path)
+    list_name = list_path + "\\" + list_list[list_index]
+    task_list = Get_CSV(list_name)
+
+    menu_choice = ""
+    count = 0
+
+    print(list_list[list_index]+ "\n")
+    for row in task_list:
+        if count == 0:
+            print("\t" + row[0] + "\t\t" + row[1])
+        else:
+            print(str(count) + ".\t" + row[0] + "\t\t" + row[1])
+        count += 1
+    
+    print("\nWhich task would you like to add? (Press '0' to cancel)")
+    menu_choice = input("-> ")
+    
+    if not(menu_choice == "0"):
+        task_list.append([menu_choice, ""])
+
+        Write_CSV(list_name, task_list)
+
+    Read_List(list_index)
 
 #Delete the designated task
-def Delete_Task(index):
-    print(index)
+def Delete_Task(list_index):
+    os.system('cls')
+    list_path = str("C:\GitHub Repos\To-Do-List-Manager\Lists")
+    list_list = os.listdir(list_path)
+    list_name = list_path + "\\" + list_list[list_index]
+    task_list = Get_CSV(list_name)
+
+    menu_choice = ""
+    count = 0
+
+    print(list_list[list_index]+ "\n")
+    for row in task_list:
+        if count == 0:
+            print("\t" + row[0] + "\t\t" + row[1])
+        else:
+            print(str(count) + ".\t" + row[0] + "\t\t" + row[1])
+        count += 1
+    
+    print("\nWhich task would you like to delete? (Press '0' to cancel)")
+    
+    while not(menu_choice.isdigit()):
+        menu_choice = input("-> ")
+
+        if menu_choice == "0":
+            menu_choice = menu_choice
+        elif menu_choice.isdigit():
+            if not((int(menu_choice) >= 1) and (int(menu_choice) <= (len(task_list) - 1))):
+                os.system('cls')
+                menu_choice = str("")
+                count = 0
+
+                print(list_list[list_index]+ "\n")
+                for row in task_list:
+                    if count == 0:
+                        print("\t" + row[0] + "\t\t" + row[1])
+                    else:
+                        print(str(count) + ".\t" + row[0] + "\t\t" + row[1])
+                    count += 1
+                
+                print("\nWhich task would you like to delete? (Press '0' to cancel)")
+                
+                print("\nThat was not a valid choice. Please enter the corresponding number of your choice.")
+        elif not(menu_choice.isdigit()):
+            os.system('cls')
+            count = 0
+            menu_choice = str("")
+
+            print(list_list[list_index]+ "\n")
+            for row in task_list:
+                if count == 0:
+                    print("\t" + row[0] + "\t\t" + row[1])
+                else:
+                    print(str(count) + ".\t" + row[0] + "\t\t" + row[1])
+                count += 1
+            
+            print("\nWhich task would you like to delete? (Press '0' to cancel)")
+
+            print("\nThat was not a valid choice. Please enter the corresponding number of your choice.")
+
+    if not(menu_choice == "0"):
+        task_list.pop(int(menu_choice))
+
+        Write_CSV(list_name, task_list)
+
+    Read_List(list_index)
 
 #Delete the entire list, with confirmation
-def Delete_List(index):
-    print(index)
+def Delete_List(list_index):
+    os.system('cls')
+    list_path = str("C:\GitHub Repos\To-Do-List-Manager\Lists")
+    list_list = os.listdir(list_path)
+    list_name = list_path + "\\" + list_list[list_index]
+
+    print("Are you sure you want to delete the entire list? (Enter '0' to cancel)")
+    print("\nEnter 'DELETE' to confirm.")
+    menu_choice = input("-> ")
+
+    
+    
 
 Main_Menu()
