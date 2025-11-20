@@ -392,11 +392,29 @@ def Delete_List(list_index):
     list_list = os.listdir(list_path)
     list_name = list_path + "\\" + list_list[list_index]
 
+    menu_choice = str("")
+
     print("Are you sure you want to delete the entire list? (Enter '0' to cancel)")
     print("\nEnter 'DELETE' to confirm.")
-    menu_choice = input("-> ")
 
-    
-    
+    while menu_choice == "":
+        menu_choice = input("-> ")
+
+        if menu_choice == "0":
+            menu_choice = "0"
+        elif menu_choice == "DELETE":
+            os.remove(list_name)   
+        else:
+            os.system('cls')
+
+            menu_choice = str("")
+
+            print("Are you sure you want to delete the entire list? (Enter '0' to cancel)")
+            print("\nEnter 'DELETE' to confirm.") 
+
+    if menu_choice == "0":
+        Read_List(list_index)
+    if menu_choice == "DELETE":
+        View_List()   
 
 Main_Menu()
