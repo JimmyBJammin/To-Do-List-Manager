@@ -69,7 +69,7 @@ def Get_CSV(csv_name):
 #New_List will allow user to create lists and assign task_list to them
 def New_List():
     os.system('cls')
-    list_path = str("C:\GitHub Repos\To-Do-List-Manager\Lists")
+    list_path = str(os.getcwd() + "\Lists")
     list_list = os.listdir(list_path)
     menu_choice = str("")
     new_list_name = str("")
@@ -106,7 +106,7 @@ def New_List():
 #View_List will display all created lists on the user's machines
 def View_List():
     os.system('cls')
-    list_path = str("C:\GitHub Repos\To-Do-List-Manager\Lists")
+    list_path = str(os.getcwd() + "\Lists")
     list_list = os.listdir(list_path)
 
     count = 0
@@ -162,7 +162,7 @@ def View_List():
 #Read_List will print the data from the .csv file and allow editing
 def Read_List(list_index):
     os.system('cls')
-    list_path = str("C:\GitHub Repos\To-Do-List-Manager\Lists")
+    list_path = str(os.getcwd() + "\Lists")
     list_list = os.listdir(list_path)
     list_name = list_path + "\\" + list_list[list_index]
     task_list = Get_CSV(list_name)
@@ -225,7 +225,7 @@ def Read_List(list_index):
 #Mark the designated task as complete with an 'x'
 def Complete_Task(list_index):
     os.system('cls')
-    list_path = str("C:\GitHub Repos\To-Do-List-Manager\Lists")
+    list_path = str(os.getcwd() + "\Lists")
     list_list = os.listdir(list_path)
     list_name = list_path + "\\" + list_list[list_index]
     task_list = Get_CSV(list_name)
@@ -292,7 +292,7 @@ def Complete_Task(list_index):
 #Add a task to the end of the list of tasks
 def Add_Task(list_index):
     os.system('cls')
-    list_path = str("C:\GitHub Repos\To-Do-List-Manager\Lists")
+    list_path = str(os.getcwd() + "\Lists")
     list_list = os.listdir(list_path)
     list_name = list_path + "\\" + list_list[list_index]
     task_list = Get_CSV(list_name)
@@ -321,7 +321,7 @@ def Add_Task(list_index):
 #Delete the designated task
 def Delete_Task(list_index):
     os.system('cls')
-    list_path = str("C:\GitHub Repos\To-Do-List-Manager\Lists")
+    list_path = str(os.getcwd() + "\Lists")
     list_list = os.listdir(list_path)
     list_name = list_path + "\\" + list_list[list_index]
     task_list = Get_CSV(list_name)
@@ -388,7 +388,7 @@ def Delete_Task(list_index):
 #Delete the entire list, with confirmation
 def Delete_List(list_index):
     os.system('cls')
-    list_path = str("C:\GitHub Repos\To-Do-List-Manager\Lists")
+    list_path = str(os.getcwd() + "\Lists")
     list_list = os.listdir(list_path)
     list_name = list_path + "\\" + list_list[list_index]
 
@@ -416,5 +416,12 @@ def Delete_List(list_index):
         Read_List(list_index)
     if menu_choice == "DELETE":
         View_List()   
+
+#Will create the Lists folder wherever the program is saved.
+list_path = str(os.getcwd() + "\Lists")
+
+if not(os.path.isdir(list_path)):
+    os.makedirs(list_path)
+
 
 Main_Menu()
